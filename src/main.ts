@@ -191,10 +191,62 @@ rightPanel.appendChild(
     createSection(
         "Project Portfolio",
         `
-        shalalalala lalalala project time!
+        Check out some of my Projects below!
         `
     )
 )
+
+const projectContainer = document.createElement("div")
+projectContainer.className = "project-container"
+
+rightPanel.append(projectContainer)
+
+// Github API
+
+async function loadGitHubProjects() {
+    const username = "aarontjones"
+
+    const response = await fetch(`https://api.github.com/users/${username}/repos`)
+    const repos = await response.json()
+
+    for (const repo of repos) { // Go through all repos i have on my acc.
+
+        if (repo.fork) continue
+
+        try {
+
+            const checkFile = await fetch (
+                `https://api.github.com/repos/${username}/${repo.name}/contents/allow.txt` // Check for specific File of repo. If it exists, allow onto site - stops clogging.
+            )
+
+            if (!checkFile.ok) continue
+
+            const card = document.createElement("div")
+            card.className = "project-card"
+
+            const title = document.createElement("h3")
+            title.innerText = repo.name
+
+            const description = document.createElement("p")
+            description.innerText = repo.description || "No description provided."
+
+            const link = document.createElement("a")
+            link.href = repo.html_url
+            link.target = "_blank"
+            link.innerText = "View on GitHub"
+
+            card.appendChild(title)
+            card.appendChild(description)
+            card.appendChild(link)
+
+            projectContainer.appendChild(card)
+        } catch (err) {
+            console.log("Skipping Repo:", repo.name) // Error Handling
+        }
+    }
+}
+
+loadGitHubProjects()
 
 // assemble page
 container.appendChild(leftPanel)

@@ -1,1 +1,7 @@
 use "npx tsc" to recompile when editing
+
+git commands:
+
+
+
+use "git pull origin main to pull from repo"

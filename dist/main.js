@@ -1,3 +1,12 @@
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 const app = document.getElementById("app");
 if (!app)
     throw new Error("App container not found");
@@ -123,8 +132,47 @@ rightPanel.appendChild(createSection("Experience", `
         `));
 //Portfolio Section
 rightPanel.appendChild(createSection("Project Portfolio", `
-        shalalalala lalalala project time!
+        Check out some of my Projects below!
         `));
+const projectContainer = document.createElement("div");
+projectContainer.className = "project-container";
+rightPanel.append(projectContainer);
+// Github API
+function loadGitHubProjects() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const username = "aarontjones";
+        const response = yield fetch(`https://api.github.com/users/${username}/repos`);
+        const repos = yield response.json();
+        for (const repo of repos) { // Go through all repos i have on my acc.
+            if (repo.fork)
+                continue;
+            try {
+                const checkFile = yield fetch(`https://api.github.com/repos/${username}/${repo.name}/contents/allow.txt` // Check for specific File of repo. If it exists, allow onto site - stops clogging.
+                );
+                if (!checkFile.ok)
+                    continue;
+                const card = document.createElement("div");
+                card.className = "project-card";
+                const title = document.createElement("h3");
+                title.innerText = repo.name;
+                const description = document.createElement("p");
+                description.innerText = repo.description || "No description provided.";
+                const link = document.createElement("a");
+                link.href = repo.html_url;
+                link.target = "_blank";
+                link.innerText = "View on GitHub";
+                card.appendChild(title);
+                card.appendChild(description);
+                card.appendChild(link);
+                projectContainer.appendChild(card);
+            }
+            catch (err) {
+                console.log("Skipping Repo:", repo.name); // Error Handling
+            }
+        }
+    });
+}
+loadGitHubProjects();
 // assemble page
 container.appendChild(leftPanel);
 container.appendChild(rightPanel);
