@@ -33,7 +33,47 @@ bio.innerText = "Professional Freelance Programmer"
 bioContainer.appendChild(name)
 bioContainer.appendChild(bio)
 
-// Ticker goes here
+// Ticker
+
+const tickerContainer = document.createElement("div")
+tickerContainer.className = "ticker-wrapper"
+
+const ticker = document.createElement("div")
+ticker.className = "ticker"
+
+const technologies = [
+    {name: "CSS", icon: "./assets/icons/ticker/css.png" },
+    {name: "Docker", icon: "./assets/icons/ticker/docker.png" },
+    {name: "Github", icon: "./assets/icons/ticker/github.svg" },
+    {name: "HTML", icon: "./assets/icons/ticker/html.png" },
+    {name: "PHP", icon: "./assets/icons/ticker/php.png" },
+    {name: "Python", icon: "./assets/icons/ticker/python.png" },
+    {name: "Typescript", icon: "./assets/icons/ticker/typescript.png" }
+]
+
+// Creating ticker items
+function createTickerItem(iconPath: string, label: string) {
+    const item = document.createElement("div")
+    item.className = "ticker-item"
+
+    const icon = document.createElement("img")
+    icon.src = iconPath
+    icon.alt = label
+
+    item.appendChild(icon)
+
+    return item
+}
+
+// Add items to ticker twice for seamless looping
+
+for (let i = 0; i < 2; i++) {
+    technologies.forEach(tech => {
+        ticker.appendChild(createTickerItem(tech.icon, tech.name))
+    })
+}
+
+tickerContainer.appendChild(ticker)
 
 // Social Container
 
@@ -85,6 +125,7 @@ socialContainer.appendChild(emailLink)
 
 leftPanel.appendChild(profilePicContainer)
 leftPanel.appendChild(bioContainer)
+leftPanel.appendChild(tickerContainer)
 leftPanel.appendChild(socialContainer)
 
 
@@ -117,6 +158,68 @@ rightPanel.appendChild(
         `
     )
 )
+
+//Portfolio Section
+rightPanel.appendChild(
+    createSection(
+        "Project Portfolio",
+        `
+        Check out some of my Projects below!
+        `
+    )
+)
+
+const projectContainer = document.createElement("div")
+projectContainer.className = "project-container"
+
+rightPanel.append(projectContainer)
+
+// Github API
+
+async function loadGitHubProjects() {
+    const username = "aarontjones"
+
+    const response = await fetch(`https://api.github.com/users/${username}/repos`)
+    const repos = await response.json()
+
+    for (const repo of repos) { // Go through all repos i have on my acc.
+
+        if (repo.fork) continue
+
+        try {
+
+            const checkFile = await fetch (
+                `https://api.github.com/repos/${username}/${repo.name}/contents/allow.txt` // Check for specific File of repo. If it exists, allow onto site - stops clogging.
+            )
+
+            if (!checkFile.ok) continue
+
+            const card = document.createElement("div")
+            card.className = "project-card"
+
+            const title = document.createElement("h3")
+            title.innerText = repo.name
+
+            const description = document.createElement("p")
+            description.innerText = repo.description || "No description provided."
+
+            const link = document.createElement("a")
+            link.href = repo.html_url
+            link.target = "_blank"
+            link.innerText = "View on GitHub"
+
+            card.appendChild(title)
+            card.appendChild(description)
+            card.appendChild(link)
+
+            projectContainer.appendChild(card)
+        } catch (err) {
+            console.log("Skipping Repo:", repo.name) // Error Handling
+        }
+    }
+}
+
+loadGitHubProjects()
 
 // Education section
 rightPanel.appendChild(
@@ -186,67 +289,6 @@ rightPanel.appendChild(
     )
 )
 
-//Portfolio Section
-rightPanel.appendChild(
-    createSection(
-        "Project Portfolio",
-        `
-        Check out some of my Projects below!
-        `
-    )
-)
-
-const projectContainer = document.createElement("div")
-projectContainer.className = "project-container"
-
-rightPanel.append(projectContainer)
-
-// Github API
-
-async function loadGitHubProjects() {
-    const username = "aarontjones"
-
-    const response = await fetch(`https://api.github.com/users/${username}/repos`)
-    const repos = await response.json()
-
-    for (const repo of repos) { // Go through all repos i have on my acc.
-
-        if (repo.fork) continue
-
-        try {
-
-            const checkFile = await fetch (
-                `https://api.github.com/repos/${username}/${repo.name}/contents/allow.txt` // Check for specific File of repo. If it exists, allow onto site - stops clogging.
-            )
-
-            if (!checkFile.ok) continue
-
-            const card = document.createElement("div")
-            card.className = "project-card"
-
-            const title = document.createElement("h3")
-            title.innerText = repo.name
-
-            const description = document.createElement("p")
-            description.innerText = repo.description || "No description provided."
-
-            const link = document.createElement("a")
-            link.href = repo.html_url
-            link.target = "_blank"
-            link.innerText = "View on GitHub"
-
-            card.appendChild(title)
-            card.appendChild(description)
-            card.appendChild(link)
-
-            projectContainer.appendChild(card)
-        } catch (err) {
-            console.log("Skipping Repo:", repo.name) // Error Handling
-        }
-    }
-}
-
-loadGitHubProjects()
 
 // assemble page
 container.appendChild(leftPanel)

@@ -1,13 +1,11 @@
 In order:
 
 
-Fix Image ticker
-Fill out experience - add the ticker
+
+Fill out experience
 
 
 API rate limiting - saves information and reloads only at night - prolly works if i host on server
-Overhaul repo thing with filter - For example selecting repos with only allow.txt in website
-
 
 (optional - dark mode light mode switch somwehere idk if its useful prolly not, prolly yes to flex knowledge)
 

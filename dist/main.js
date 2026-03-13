@@ -32,7 +32,37 @@ const bio = document.createElement("p");
 bio.innerText = "Professional Freelance Programmer";
 bioContainer.appendChild(name);
 bioContainer.appendChild(bio);
-// Ticker goes here
+// Ticker
+const tickerContainer = document.createElement("div");
+tickerContainer.className = "ticker-wrapper";
+const ticker = document.createElement("div");
+ticker.className = "ticker";
+const technologies = [
+    { name: "CSS", icon: "./assets/icons/ticker/css.png" },
+    { name: "Docker", icon: "./assets/icons/ticker/docker.png" },
+    { name: "Github", icon: "./assets/icons/ticker/github.svg" },
+    { name: "HTML", icon: "./assets/icons/ticker/html.png" },
+    { name: "PHP", icon: "./assets/icons/ticker/php.png" },
+    { name: "Python", icon: "./assets/icons/ticker/python.png" },
+    { name: "Typescript", icon: "./assets/icons/ticker/typescript.png" }
+];
+// Creating ticker items
+function createTickerItem(iconPath, label) {
+    const item = document.createElement("div");
+    item.className = "ticker-item";
+    const icon = document.createElement("img");
+    icon.src = iconPath;
+    icon.alt = label;
+    item.appendChild(icon);
+    return item;
+}
+// Add items to ticker twice for seamless looping
+for (let i = 0; i < 2; i++) {
+    technologies.forEach(tech => {
+        ticker.appendChild(createTickerItem(tech.icon, tech.name));
+    });
+}
+tickerContainer.appendChild(ticker);
 // Social Container
 const socialContainer = document.createElement("div");
 socialContainer.className = "social-container";
@@ -66,6 +96,7 @@ socialContainer.appendChild(emailLink);
 // assemble left panel
 leftPanel.appendChild(profilePicContainer);
 leftPanel.appendChild(bioContainer);
+leftPanel.appendChild(tickerContainer);
 leftPanel.appendChild(socialContainer);
 // --------------------------------------------------------------------------------------------------- RIGHT PANEL
 const rightPanel = document.createElement("div");
@@ -85,6 +116,49 @@ function createSection(title, content) {
 rightPanel.appendChild(createSection("About me", `
         I am Aaron, a long-term programmer, with over 9 years of programming experience throughout GCSE's, A-Levels and University.
         `));
+//Portfolio Section
+rightPanel.appendChild(createSection("Project Portfolio", `
+        Check out some of my Projects below!
+        `));
+const projectContainer = document.createElement("div");
+projectContainer.className = "project-container";
+rightPanel.append(projectContainer);
+// Github API
+function loadGitHubProjects() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const username = "aarontjones";
+        const response = yield fetch(`https://api.github.com/users/${username}/repos`);
+        const repos = yield response.json();
+        for (const repo of repos) { // Go through all repos i have on my acc.
+            if (repo.fork)
+                continue;
+            try {
+                const checkFile = yield fetch(`https://api.github.com/repos/${username}/${repo.name}/contents/allow.txt` // Check for specific File of repo. If it exists, allow onto site - stops clogging.
+                );
+                if (!checkFile.ok)
+                    continue;
+                const card = document.createElement("div");
+                card.className = "project-card";
+                const title = document.createElement("h3");
+                title.innerText = repo.name;
+                const description = document.createElement("p");
+                description.innerText = repo.description || "No description provided.";
+                const link = document.createElement("a");
+                link.href = repo.html_url;
+                link.target = "_blank";
+                link.innerText = "View on GitHub";
+                card.appendChild(title);
+                card.appendChild(description);
+                card.appendChild(link);
+                projectContainer.appendChild(card);
+            }
+            catch (err) {
+                console.log("Skipping Repo:", repo.name); // Error Handling
+            }
+        }
+    });
+}
+loadGitHubProjects();
 // Education section
 rightPanel.appendChild(createSection("Education", `
         University of the West of England (UWE), Bristol | 2021-2025
@@ -130,49 +204,6 @@ rightPanel.appendChild(createSection("Experience", `
         
         In terms of technical skills, I am extremely proficient in Office 365 (Excel, Word, Powerpoint), AWS, and other skills as shown in the ticker.
         `));
-//Portfolio Section
-rightPanel.appendChild(createSection("Project Portfolio", `
-        Check out some of my Projects below!
-        `));
-const projectContainer = document.createElement("div");
-projectContainer.className = "project-container";
-rightPanel.append(projectContainer);
-// Github API
-function loadGitHubProjects() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const username = "aarontjones";
-        const response = yield fetch(`https://api.github.com/users/${username}/repos`);
-        const repos = yield response.json();
-        for (const repo of repos) { // Go through all repos i have on my acc.
-            if (repo.fork)
-                continue;
-            try {
-                const checkFile = yield fetch(`https://api.github.com/repos/${username}/${repo.name}/contents/allow.txt` // Check for specific File of repo. If it exists, allow onto site - stops clogging.
-                );
-                if (!checkFile.ok)
-                    continue;
-                const card = document.createElement("div");
-                card.className = "project-card";
-                const title = document.createElement("h3");
-                title.innerText = repo.name;
-                const description = document.createElement("p");
-                description.innerText = repo.description || "No description provided.";
-                const link = document.createElement("a");
-                link.href = repo.html_url;
-                link.target = "_blank";
-                link.innerText = "View on GitHub";
-                card.appendChild(title);
-                card.appendChild(description);
-                card.appendChild(link);
-                projectContainer.appendChild(card);
-            }
-            catch (err) {
-                console.log("Skipping Repo:", repo.name); // Error Handling
-            }
-        }
-    });
-}
-loadGitHubProjects();
 // assemble page
 container.appendChild(leftPanel);
 container.appendChild(rightPanel);
