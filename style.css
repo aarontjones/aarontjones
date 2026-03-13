@@ -26,6 +26,7 @@ body {
     bottom: 0;
     left: 45%;
     width: 2px;
+    z-index: 2; /* added because of particles */
     background: linear-gradient(
         to bottom,
         #2c220d,
@@ -44,9 +45,9 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    position: sticky;
+    position: sticky; /* stays fixed while scrolling */
     top: 0;
-    height: 100vh;
+    z-index: 1;
 }
 
 
@@ -94,7 +95,46 @@ body {
     opacity: 45%;
 }
 
-/* Ticker Section */
+/* Ticker Stuff */
+
+.ticker-wrapper {
+    width: 35%;
+    overflow: hidden;
+    margin-top: 25%;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.ticker {
+    display: flex;
+    width: max-content;
+    animation: ticker-scroll 20s linear infinite;
+}
+
+.ticker-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+}
+
+.ticker-item img {
+    width: 34px;
+    height: 34px;
+    opacity: 0.8;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+/* infinite scroll animation */
+
+@keyframes ticker-scroll {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-50%);
+    }
+}
 
 /* Socials container */
 
@@ -137,6 +177,19 @@ body {
     opacity: 0.8;
 }
 
+/* Particles */
+
+#particles-left {
+    position: absolute; /* stays inside left panel */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* behind content */
+    pointer-events: none;
+}
+
+
 /* Right panel section*/
 
 .right-panel {
@@ -144,6 +197,7 @@ body {
     padding: 40px;
     overflow-y: auto;
     background: #181818;
+    z-index: 2;
 }
 
 .download-container { /* Same as social container, but doesn't have golden divider - only used for CV download container */
@@ -256,43 +310,3 @@ body {
     text-decoration: underline;
 }
 
-/* Ticker Stuff */
-
-.ticker-wrapper {
-    width: 35%;
-    overflow: hidden;
-    margin-top: 25%;
-    margin-bottom: 20px;
-    position: relative;
-}
-
-.ticker {
-    display: flex;
-    width: max-content;
-    animation: ticker-scroll 20s linear infinite;
-}
-
-.ticker-item {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 20px;
-}
-
-.ticker-item img {
-    width: 34px;
-    height: 34px;
-    opacity: 0.8;
-    transition: transform 0.2s ease, opacity 0.2s ease;
-}
-
-/* infinite scroll animation */
-
-@keyframes ticker-scroll {
-    from {
-        transform: translateX(0);
-    }
-    to {
-        transform: translateX(-50%);
-    }
-}

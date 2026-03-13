@@ -16,6 +16,31 @@ container.className = "container";
 // Left Panel
 const leftPanel = document.createElement("div");
 leftPanel.className = "left-panel";
+// Particles Section
+const particlesBg = document.createElement("div");
+particlesBg.id = "particles-left";
+// Initializing Particles
+tsParticles.load("particles-left", {
+    fullScreen: { enable: false }, // disables full-screen, particles stay in the div
+    fpsLimit: false, // not sure if this even does anything to be honest
+    background: { color: "transparent" },
+    particles: {
+        number: { value: 50, density: { enable: true, area: 800 } },
+        color: { value: "#d4af37" },
+        shape: { type: "circle" },
+        opacity: { value: 0.5, random: true },
+        size: { value: 2, random: true },
+        links: {
+            enable: true,
+            distance: 200,
+            color: "#d4af37",
+            opacity: 0.25,
+            width: 0.5
+        },
+        move: { enable: true, speed: 4, outModes: "out" }
+    },
+    detectRetina: true
+});
 // Profile Picture
 const profilePicContainer = document.createElement("div");
 profilePicContainer.className = "profile-pic-container";
@@ -94,6 +119,7 @@ socialContainer.appendChild(linkedInLink);
 socialContainer.appendChild(githubLink);
 socialContainer.appendChild(emailLink);
 // assemble left panel
+leftPanel.appendChild(particlesBg);
 leftPanel.appendChild(profilePicContainer);
 leftPanel.appendChild(bioContainer);
 leftPanel.appendChild(tickerContainer);
@@ -159,6 +185,14 @@ function loadGitHubProjects() {
     });
 }
 loadGitHubProjects();
+//Experience Section
+rightPanel.appendChild(createSection("Experience", `
+        I have over 9 years of programming experience, including languages like Python, TypeScript, HTML and CSS and C. Furthermore, I have high technical experience in Docker, AWS, JupyterNotebook, and other industry-standard technologies. 
+
+        While I do not have much experience professionally with programming jobs, I do have a couple freelance jobs under my belt, as well as other job experience, as stated in my CV.
+        
+        In terms of technical skills, I am extremely proficient in Office 365 (Excel, Word, Powerpoint), AWS, and other skills as shown in the ticker.
+        `));
 // Education section
 rightPanel.appendChild(createSection("Education", `
         University of the West of England (UWE), Bristol | 2021-2025
@@ -195,15 +229,6 @@ const cvDownloadButton = createDownloadButton("cv.pdf", // file name for downloa
 "Download CV");
 downloadContainer.appendChild(cvDownloadButton);
 rightPanel.appendChild(downloadContainer);
-// To DO for experience:
-// Create a ticker like thing, with icons of all languages / technologies i use (Python, TS, HTML, CSS, git, etc.)
-// I have no idea how to do that, but fuck it we ball.
-//Experience Section
-rightPanel.appendChild(createSection("Experience", `
-        While I do not have much experience professionally with programming jobs, I do have a couple freelance jobs under my belt, as well as other job experience, as stated in my CV.
-        
-        In terms of technical skills, I am extremely proficient in Office 365 (Excel, Word, Powerpoint), AWS, and other skills as shown in the ticker.
-        `));
 // assemble page
 container.appendChild(leftPanel);
 container.appendChild(rightPanel);
