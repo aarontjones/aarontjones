@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-const app = document.getElementById("app");
+const app = document.getElementById("app"); // Start app
 if (!app)
     throw new Error("App container not found");
 // main container
@@ -20,13 +20,14 @@ leftPanel.className = "left-panel";
 const particlesBg = document.createElement("div");
 particlesBg.id = "particles-left";
 // Initializing Particles
+let particlesInstance; // particle instance for mode switch
 tsParticles.load("particles-left", {
-    fullScreen: { enable: false }, // disables full-screen, particles stay in the div
-    fpsLimit: false, // not sure if this even does anything to be honest
+    fullScreen: { enable: false },
+    fpsLimit: false,
     background: { color: "transparent" },
     particles: {
         number: { value: 50, density: { enable: true, area: 800 } },
-        color: { value: "#d4af37" },
+        color: { value: "#d4af37" }, // default gold
         shape: { type: "circle" },
         opacity: { value: 0.5, random: true },
         size: { value: 2, random: true },
@@ -40,7 +41,13 @@ tsParticles.load("particles-left", {
         move: { enable: true, speed: 4, outModes: "out" }
     },
     detectRetina: true
+}).then((container) => {
+    particlesInstance = container;
 });
+// Dark mode button
+const darkModeButton = document.createElement("div");
+darkModeButton.className = "dark-mode-button";
+darkModeButton.title = "Toggle Scheme";
 // Profile Picture
 const profilePicContainer = document.createElement("div");
 profilePicContainer.className = "profile-pic-container";
@@ -120,10 +127,24 @@ socialContainer.appendChild(githubLink);
 socialContainer.appendChild(emailLink);
 // assemble left panel
 leftPanel.appendChild(particlesBg);
+leftPanel.appendChild(darkModeButton);
 leftPanel.appendChild(profilePicContainer);
 leftPanel.appendChild(bioContainer);
 leftPanel.appendChild(tickerContainer);
 leftPanel.appendChild(socialContainer);
+//Dark Mode Toggle
+darkModeButton.addEventListener("click", () => {
+    const lightMode = document.body.classList.toggle("light-mode"); // returns true if added
+    if (particlesInstance) {
+        const color = lightMode ? "#7b5cff" : "#d4af37"; // purple or gold
+        const linkColor = lightMode ? "#7b5cff" : "#d4af37";
+        // Update particle color
+        particlesInstance.options.particles.color.value = color;
+        particlesInstance.options.particles.links.color = linkColor;
+        // Refresh particles to apply new colors
+        particlesInstance.refresh();
+    }
+});
 // --------------------------------------------------------------------------------------------------- RIGHT PANEL
 const rightPanel = document.createElement("div");
 rightPanel.className = "right-panel";
@@ -163,6 +184,9 @@ function loadGitHubProjects() {
                 );
                 if (!checkFile.ok)
                     continue;
+                // Description Gathering
+                const fileData = yield checkFile.json();
+                const decodedText = atob(fileData.content);
                 // Screenshot Gathering
                 const screenshotURL = `https://raw.githubusercontent.com/${username}/${repo.name}/main/Screenshot.png`;
                 const screenshotContainer = document.createElement("div");
@@ -175,16 +199,17 @@ function loadGitHubProjects() {
                     screenshotContainer.remove();
                 };
                 screenshotContainer.appendChild(screenshot);
-                // assembling each card
+                // Creating each card
                 const card = document.createElement("div");
                 card.className = "project-card";
-                const description = document.createElement("p");
-                description.innerText = repo.description || "No description provided.";
                 // creating a header of the title and link
                 const header = document.createElement("div");
                 header.className = "project-header";
                 const title = document.createElement("h3");
                 title.innerText = repo.name;
+                // Description
+                const description = document.createElement("p");
+                description.innerText = decodedText;
                 const link = document.createElement("a");
                 link.href = repo.html_url;
                 link.target = "_blank";
@@ -192,7 +217,7 @@ function loadGitHubProjects() {
                 header.appendChild(title);
                 header.appendChild(link);
                 card.appendChild(header); // Title and Github Link
-                card.appendChild(description); // Description
+                screenshotContainer.appendChild(description);
                 card.appendChild(screenshotContainer); // Screenshot
                 projectContainer.appendChild(card);
             }
@@ -202,7 +227,7 @@ function loadGitHubProjects() {
         }
     });
 }
-loadGitHubProjects();
+loadGitHubProjects(); // Initializes all github projects into the portfolio section, as long as they have a allow.txt file in the root directory.
 //Experience Section
 rightPanel.appendChild(createSection("Experience", `
         I have over 9 years of programming experience, including languages like Python, TypeScript, HTML and CSS and C. Furthermore, I have high technical experience in Docker, AWS, JupyterNotebook, and other industry-standard technologies. 

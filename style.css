@@ -47,6 +47,38 @@ body {
     z-index: 1;
 }
 
+/* Dark mode button */
+
+.dark-mode-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 40px;
+    height: 20px;
+    background: #2c220d;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 2px;
+    z-index: 5;
+    transition: background 0.3s ease;
+}
+
+.dark-mode-button::before {
+    content: "";
+    width: 16px;
+    height: 16px;
+    background: #d4af37; /* knob color matches gold */
+    border-radius: 50%;
+    transition: transform 0.3s ease, background 0.3s ease;
+}
+
+/* Hover effect */
+.dark-mode-button:hover {
+    background: #7d6424;
+}
+
 /* Profile Pic section */
 .profile-pic {
     width: 200px;
@@ -268,8 +300,15 @@ body {
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.35s ease;
+
     display: flex;
-    justify-content: center;
+    flex-direction: column;   /* stack items vertically */
+    align-items: center;      /* keep screenshot centered */
+}
+
+.project-screenshot-container p {
+    margin-top: 10px;
+    max-width: 90%;
 }
 
 .project-screenshot {
@@ -324,7 +363,7 @@ body {
 /* Hover effects for portfolio */
 
 .project-card:hover .project-screenshot-container {
-    max-height: 500px;
+    max-height: 1000px;
 }
 
 .project-card:hover::before {
@@ -351,3 +390,71 @@ body {
     text-decoration: underline;
 }
 
+/* Light mode Stuff */
+
+body.light-mode .dark-mode-button {
+    background: #7b5cff; /* purple track */
+}
+
+body.light-mode .dark-mode-button::before {
+    background: #a987fa; /* knob color */
+    transform: translateX(20px); /* slide knob to right */
+}
+
+/* LIGHT MODE COLORS */
+body.light-mode {
+    background: #fefefe; /* main body background */
+    color: #3c0d5b; /* dark purple text */
+}
+
+/* Left Panel */
+body.light-mode .left-panel {
+    background: #ffffff;
+    color: #3c0d5b;
+}
+
+/* Particles (optional: change color) */
+body.light-mode #particles-left {
+    /* can change particle color dynamically if needed */
+}
+
+/* Ticker */
+body.light-mode .ticker-item img {
+    filter: hue-rotate(260deg) saturate(1.5); /* purple-ish tint */
+}
+
+/* Right Panel */
+body.light-mode .right-panel {
+    background: #f5f5ff;
+    color: #3c0d5b;
+}
+
+/* Golden dividers -> purple dividers */
+body.light-mode .container::after,
+body.light-mode .social-container::before,
+body.light-mode .section:not(:first-child)::before,
+body.light-mode .project-card::before {
+    background: linear-gradient(
+        to bottom,
+        #a987fa,
+        #7b5cff,
+        #a987fa
+    );
+    box-shadow: 0 0 8px rgba(123, 92, 255, 0.5);
+}
+
+/* Project link hover colors */
+body.light-mode .project-header a,
+body.light-mode .project-card a {
+    color: #7b5cff;
+}
+
+body.light-mode .project-card {
+    background: #ffffff;
+}
+
+body.light-mode .project-screenshot {
+    background:
+        linear-gradient(#ffffff, #ffffff) padding-box,
+        linear-gradient(to right, #a987fa, #7b5cff, #a987fa) border-box; /* match divider color */
+}

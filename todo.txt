@@ -1,9 +1,5 @@
 In order of importance:
 
-// Profile Pic
-Find out a way to get profile pic to hide particles.
-change pfp to not be local img, but instead take it from github profile picture.
-
 // Size adjustments
 If window is shrunk horizontally, it should change layout, so everything is in one track, the vertical divider is horizontal just below where socials are, and all is normal beyond that. - particles only still in 'left' panel.
 

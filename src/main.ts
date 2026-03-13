@@ -1,6 +1,6 @@
-declare const tsParticles: any;
+declare const tsParticles: any; // gather tsParticles
 
-const app = document.getElementById("app")
+const app = document.getElementById("app") // Start app
 
 if (!app) throw new Error("App container not found")
 
@@ -13,20 +13,19 @@ const leftPanel = document.createElement("div")
 leftPanel.className = "left-panel"
 
 // Particles Section
-
 const particlesBg = document.createElement("div")
 particlesBg.id = "particles-left"
 
-
 // Initializing Particles
+let particlesInstance: any; // particle instance for mode switch
 
 tsParticles.load("particles-left", {
-    fullScreen: { enable: false }, // disables full-screen, particles stay in the div
-    fpsLimit: false, // not sure if this even does anything to be honest
+    fullScreen: { enable: false },
+    fpsLimit: false,
     background: { color: "transparent" },
     particles: {
         number: { value: 50, density: { enable: true, area: 800 } },
-        color: { value: "#d4af37" },
+        color: { value: "#d4af37" }, // default gold
         shape: { type: "circle" },
         opacity: { value: 0.5, random: true },
         size: { value: 2, random: true },
@@ -40,7 +39,14 @@ tsParticles.load("particles-left", {
         move: { enable: true, speed: 4, outModes: "out" }
     },
     detectRetina: true
+}).then((container: any) => {
+    particlesInstance = container;
 });
+
+// Dark mode button
+const darkModeButton = document.createElement("div")
+darkModeButton.className = "dark-mode-button"
+darkModeButton.title = "Toggle Scheme"
 
 // Profile Picture
 const profilePicContainer = document.createElement("div")
@@ -156,11 +162,28 @@ socialContainer.appendChild(emailLink)
 // assemble left panel
 
 leftPanel.appendChild(particlesBg)
+leftPanel.appendChild(darkModeButton)
 leftPanel.appendChild(profilePicContainer)
 leftPanel.appendChild(bioContainer)
 leftPanel.appendChild(tickerContainer)
 leftPanel.appendChild(socialContainer)
 
+//Dark Mode Toggle
+darkModeButton.addEventListener("click", () => {
+    const lightMode = document.body.classList.toggle("light-mode"); // returns true if added
+
+    if (particlesInstance) {
+        const color = lightMode ? "#7b5cff" : "#d4af37"; // purple or gold
+        const linkColor = lightMode ? "#7b5cff" : "#d4af37";
+
+        // Update particle color
+        particlesInstance.options.particles.color.value = color;
+        particlesInstance.options.particles.links.color = linkColor;
+
+        // Refresh particles to apply new colors
+        particlesInstance.refresh();
+    }
+});
 
 // --------------------------------------------------------------------------------------------------- RIGHT PANEL
 const rightPanel = document.createElement("div")
@@ -227,6 +250,10 @@ async function loadGitHubProjects() {
 
             if (!checkFile.ok) continue
 
+            // Description Gathering
+            const fileData = await checkFile.json()
+            const decodedText = atob(fileData.content)
+
             // Screenshot Gathering
             const screenshotURL = `https://raw.githubusercontent.com/${username}/${repo.name}/main/Screenshot.png`
 
@@ -244,13 +271,9 @@ async function loadGitHubProjects() {
 
             screenshotContainer.appendChild(screenshot)
 
-            // assembling each card
+            // Creating each card
             const card = document.createElement("div")
             card.className = "project-card"
-
-
-            const description = document.createElement("p")
-            description.innerText = repo.description || "No description provided."
 
             // creating a header of the title and link
             const header = document.createElement("div")
@@ -258,6 +281,10 @@ async function loadGitHubProjects() {
 
             const title = document.createElement("h3")
             title.innerText = repo.name
+
+            // Description
+            const description = document.createElement("p")
+            description.innerText = decodedText
 
             const link = document.createElement("a")
             link.href = repo.html_url
@@ -268,17 +295,18 @@ async function loadGitHubProjects() {
             header.appendChild(link)
 
             card.appendChild(header) // Title and Github Link
-            card.appendChild(description) // Description
+            screenshotContainer.appendChild(description)
             card.appendChild(screenshotContainer) // Screenshot
-
+        
             projectContainer.appendChild(card)
+
         } catch (err) {
             console.log("Skipping Repo:", repo.name) // Error Handling
         }
     }
 }
 
-loadGitHubProjects()
+loadGitHubProjects() // Initializes all github projects into the portfolio section, as long as they have a allow.txt file in the root directory.
 
 //Experience Section
 rightPanel.appendChild(
