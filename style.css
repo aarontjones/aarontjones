@@ -136,6 +136,7 @@ body {
     margin-bottom: 20px;
     position: relative;
     z-index: 1;
+    background: #0f0f0f;
 }
 
 .ticker {
@@ -183,6 +184,7 @@ body {
     width: 100%;
     position: relative;
     padding-top: 25px;
+    background: #0f0f0f;
 }
 
 .social-container::before { /* added a gradient at the top of the social container, similar to the divider, just to add more */
@@ -340,6 +342,7 @@ body {
     padding: 20px;
     border-radius: 8px;
     position: relative;
+    overflow: hidden; /* hides overflow bar above each portfolio project */
 }
 
 .project-card:last-child {
@@ -417,8 +420,16 @@ body.light-mode .left-panel {
     color: #3c0d5b;
 }
 
+body.light-mode .ticker-wrapper {
+    background: #d1d1d1;
+}
+
 body.light-mode .ticker-item img {
     filter: hue-rotate(260deg) saturate(1.5); /* purple-ish tint */
+}
+
+body.light-mode .social-container {
+    background: #d1d1d1;
 }
 
 body.light-mode .right-panel {
