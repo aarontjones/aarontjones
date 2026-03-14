@@ -291,76 +291,46 @@ rightPanel.append(projectContainer)
 // Github API
 
 async function loadGitHubProjects() {
-    const username = "aarontjones"
 
-    const response = await fetch(`https://api.github.com/users/${username}/repos`)
+    const response = await fetch("./data/projects.json")
     const repos = await response.json()
 
-    for (const repo of repos) { // Go through all repos i have on my acc.
+    for (const repo of repos) {
 
-        if (repo.fork) continue
+        const screenshotContainer = document.createElement("div")
+        screenshotContainer.className = "project-screenshot-container"
 
-        try {
+        const screenshot = document.createElement("img")
+        screenshot.src = repo.screenshot
+        screenshot.className = "project-screenshot"
 
-            const checkFile = await fetch (
-                `https://api.github.com/repos/${username}/${repo.name}/contents/allow.txt` // Check for specific File of repo. If it exists, allow onto site - stops clogging.
-            )
+        const card = document.createElement("div")
+        card.className = "project-card"
 
-            if (!checkFile.ok) continue
+        const header = document.createElement("div")
+        header.className = "project-header"
 
-            // Description Gathering
-            const fileData = await checkFile.json()
-            const decodedText = atob(fileData.content)
+        const title = document.createElement("h3")
+        title.innerText = repo.name
 
-            // Screenshot Gathering
-            const screenshotURL = `https://raw.githubusercontent.com/${username}/${repo.name}/main/Screenshot.png`
+        const description = document.createElement("p")
+        description.innerText = repo.description
 
-            const screenshotContainer = document.createElement("div")
-            screenshotContainer.className = "project-screenshot-container"
+        const link = document.createElement("a")
+        link.href = repo.repo
+        link.target = "_blank"
+        link.innerText = "View on GitHub"
 
-            const screenshot  = document.createElement("img")
-            screenshot.src = screenshotURL
-            screenshot.className = "project-screenshot"
+        header.appendChild(title)
+        header.appendChild(link)
 
-            // If image is not loading
-            screenshot.onerror = () => {
-                screenshotContainer.remove()
-            }
+        screenshotContainer.appendChild(screenshot)
+        screenshotContainer.appendChild(description)
 
-            screenshotContainer.appendChild(screenshot)
+        card.appendChild(header)
+        card.appendChild(screenshotContainer)
 
-            // Creating each card
-            const card = document.createElement("div")
-            card.className = "project-card"
-
-            // creating a header of the title and link
-            const header = document.createElement("div")
-            header.className = "project-header"
-
-            const title = document.createElement("h3")
-            title.innerText = repo.name
-
-            // Description
-            const description = document.createElement("p")
-            description.innerText = decodedText
-
-            const link = document.createElement("a")
-            link.href = repo.html_url
-            link.target = "_blank"
-            link.innerText = "View on GitHub"
-
-            header.appendChild(title)
-            header.appendChild(link)
-
-            card.appendChild(header) // Title and Github Link
-            screenshotContainer.appendChild(description)
-            card.appendChild(screenshotContainer) // Screenshot
-        
-            projectContainer.appendChild(card)
-
-        } catch (err) {
-            console.log("Skipping Repo:", repo.name) // Error Handling
-        }
+        projectContainer.appendChild(card)
     }
 }
 

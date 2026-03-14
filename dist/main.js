@@ -225,57 +225,33 @@ rightPanel.append(projectContainer);
 // Github API
 function loadGitHubProjects() {
     return __awaiter(this, void 0, void 0, function* () {
-        const username = "aarontjones";
-        const response = yield fetch(`https://api.github.com/users/${username}/repos`);
+        const response = yield fetch("./data/projects.json");
         const repos = yield response.json();
-        for (const repo of repos) { // Go through all repos i have on my acc.
-            if (repo.fork)
-                continue;
-            try {
-                const checkFile = yield fetch(`https://api.github.com/repos/${username}/${repo.name}/contents/allow.txt` // Check for specific File of repo. If it exists, allow onto site - stops clogging.
-                );
-                if (!checkFile.ok)
-                    continue;
-                // Description Gathering
-                const fileData = yield checkFile.json();
-                const decodedText = atob(fileData.content);
-                // Screenshot Gathering
-                const screenshotURL = `https://raw.githubusercontent.com/${username}/${repo.name}/main/Screenshot.png`;
-                const screenshotContainer = document.createElement("div");
-                screenshotContainer.className = "project-screenshot-container";
-                const screenshot = document.createElement("img");
-                screenshot.src = screenshotURL;
-                screenshot.className = "project-screenshot";
-                // If image is not loading
-                screenshot.onerror = () => {
-                    screenshotContainer.remove();
-                };
-                screenshotContainer.appendChild(screenshot);
-                // Creating each card
-                const card = document.createElement("div");
-                card.className = "project-card";
-                // creating a header of the title and link
-                const header = document.createElement("div");
-                header.className = "project-header";
-                const title = document.createElement("h3");
-                title.innerText = repo.name;
-                // Description
-                const description = document.createElement("p");
-                description.innerText = decodedText;
-                const link = document.createElement("a");
-                link.href = repo.html_url;
-                link.target = "_blank";
-                link.innerText = "View on GitHub";
-                header.appendChild(title);
-                header.appendChild(link);
-                card.appendChild(header); // Title and Github Link
-                screenshotContainer.appendChild(description);
-                card.appendChild(screenshotContainer); // Screenshot
-                projectContainer.appendChild(card);
-            }
-            catch (err) {
-                console.log("Skipping Repo:", repo.name); // Error Handling
-            }
+        for (const repo of repos) {
+            const screenshotContainer = document.createElement("div");
+            screenshotContainer.className = "project-screenshot-container";
+            const screenshot = document.createElement("img");
+            screenshot.src = repo.screenshot;
+            screenshot.className = "project-screenshot";
+            const card = document.createElement("div");
+            card.className = "project-card";
+            const header = document.createElement("div");
+            header.className = "project-header";
+            const title = document.createElement("h3");
+            title.innerText = repo.name;
+            const description = document.createElement("p");
+            description.innerText = repo.description;
+            const link = document.createElement("a");
+            link.href = repo.repo;
+            link.target = "_blank";
+            link.innerText = "View on GitHub";
+            header.appendChild(title);
+            header.appendChild(link);
+            screenshotContainer.appendChild(screenshot);
+            screenshotContainer.appendChild(description);
+            card.appendChild(header);
+            card.appendChild(screenshotContainer);
+            projectContainer.appendChild(card);
         }
     });
 }
