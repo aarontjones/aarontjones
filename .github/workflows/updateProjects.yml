@@ -1,6 +1,6 @@
 name: Update portfolio projects
 
-permsissions:
+permissions:
   contents: write
 
 on:
