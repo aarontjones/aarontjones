@@ -101,8 +101,19 @@ socialContainer.className = "social-container";
 const linkedInLink = document.createElement("a");
 linkedInLink.href = "https://www.linkedin.com/in/aaron-jones-9a1866314/";
 linkedInLink.target = "_blank";
+// Icon Theme Changer Thing
+function updateThemeIcons(mode) {
+    const icons = document.querySelectorAll("[data-icon]");
+    icons.forEach(icon => {
+        const name = icon.dataset.icon;
+        if (!name)
+            return;
+        icon.src = `./assets/icons/logos/${mode}/${name}`;
+    });
+}
 // LinkedIn Icon
 const linkedInIcon = document.createElement("img");
+linkedInIcon.dataset.icon = "linkedin.png";
 linkedInIcon.src = "./assets/icons/logos/light/linkedin.png";
 linkedInIcon.className = "social-icon";
 linkedInLink.appendChild(linkedInIcon);
@@ -111,6 +122,7 @@ const githubLink = document.createElement("a");
 githubLink.href = "https://github.com/aarontjones";
 githubLink.target = "_blank";
 const githubIcon = document.createElement("img");
+githubIcon.dataset.icon = "github.svg";
 githubIcon.src = "./assets/icons/logos/light/github.svg";
 githubIcon.className = "social-icon";
 githubLink.appendChild(githubIcon);
@@ -118,6 +130,7 @@ githubLink.appendChild(githubIcon);
 const emailLink = document.createElement("a");
 emailLink.href = "mailto:aarontjones4722@gmail.com";
 const emailIcon = document.createElement("img");
+emailIcon.dataset.icon = "gmail.png";
 emailIcon.src = "./assets/icons/logos/light/gmail.png";
 emailIcon.className = "social-icon";
 emailLink.appendChild(emailIcon);
@@ -136,6 +149,7 @@ leftPanel.appendChild(socialContainer);
 //Dark Mode Toggle
 darkModeButton.addEventListener("click", () => {
     const lightMode = document.body.classList.toggle("light-mode"); // toggle class
+    updateThemeIcons(lightMode ? "dark" : "light");
     const color = lightMode ? "#7b5cff" : "#d4af37"; // purple or gold
     if (particlesInstance) {
         // Reload tsParticles with updated colors
@@ -279,7 +293,9 @@ function createDownloadButton(fileName, filePath, iconPath, altText) {
     link.download = fileName;
     link.target = "_blank"; // opens in new tab - may remove
     const icon = document.createElement("img");
-    icon.src = iconPath;
+    fileName = iconPath.split("/").pop();
+    icon.dataset.icon = fileName;
+    icon.src = `./assets/icons/logos/light/${fileName}`;
     icon.alt = altText;
     icon.className = "social-icon"; // reusing from socials
     link.appendChild(icon);
