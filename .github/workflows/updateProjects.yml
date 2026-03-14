@@ -1,5 +1,8 @@
 name: Update portfolio projects
 
+permsissions:
+  contents: write
+
 on:
   schedule:
     - cron: "0 0 * * *"   # every 24 hours
