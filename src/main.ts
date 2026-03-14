@@ -1,4 +1,4 @@
-declare const tsParticles: any; // gather tsParticles
+declare const tsParticles: any; // gather tsParticles at start of file
 
 const app = document.getElementById("app") // Start app
 
@@ -8,13 +8,32 @@ if (!app) throw new Error("App container not found")
 const savedTheme = localStorage.getItem("theme");
 const particleColor = savedTheme === "light" ? "#7b5cff" : "#d4af37";
 
-
 if (savedTheme === "light") {
     document.body.classList.add("light-mode");
     updateThemeIcons("dark");
 }
 
-// main container
+// Function to change Icon when mode switch
+function updateThemeIcons(mode: "light" | "dark") {
+    const icons = document.querySelectorAll<HTMLImageElement>("[data-icon]")
+
+    icons.forEach(icon => {
+        const name = icon.dataset.icon
+        if (!name) return
+
+        icon.src = `./assets/icons/logos/${mode}/${name}`
+    })
+    // Changing Ticker Icons when toggle is pressed
+    const tickerIcons = document.querySelectorAll<HTMLImageElement>("[data-ticker-icon]")
+    tickerIcons.forEach(icon => {
+        const name = icon.dataset.tickerIcon
+        if (!name) return
+        icon.src = `./assets/icons/ticker/${mode}/${name}`
+    })
+}
+
+
+// Main container
 const container = document.createElement("div")
 container.className = "container"
 
@@ -58,152 +77,6 @@ const darkModeButton = document.createElement("div")
 darkModeButton.className = "dark-mode-button"
 darkModeButton.title = "Toggle Scheme"
 
-// Profile Picture
-const profilePicContainer = document.createElement("div")
-profilePicContainer.className = "profile-pic-container"
-
-const profilePic = document.createElement("img")
-profilePic.src = "./assets/images/profile.jpeg"
-profilePic.className = "profile-pic"
-
-profilePicContainer.appendChild(profilePic)
-
-// Name and Bio
-const bioContainer = document.createElement("div")
-bioContainer.className = "bio-container"
-
-const name = document.createElement("h1")
-name.innerText = "Aaron T Jones"
-
-const bio = document.createElement("p")
-bio.innerText = "Professional Freelance Programmer"
-
-bioContainer.appendChild(name)
-bioContainer.appendChild(bio)
-
-// Ticker
-
-const tickerContainer = document.createElement("div")
-tickerContainer.className = "ticker-wrapper"
-
-const ticker = document.createElement("div")
-ticker.className = "ticker"
-
-const technologies = [
-    {name: "CSS", icon: "./assets/icons/ticker/light/css.png" },
-    {name: "Docker", icon: "./assets/icons/ticker/light/docker.png" },
-    {name: "Github", icon: "./assets/icons/ticker/light/github.svg" },
-    {name: "HTML", icon: "./assets/icons/ticker/light/html.png" },
-    {name: "PHP", icon: "./assets/icons/ticker/light/php.png" },
-    {name: "Python", icon: "./assets/icons/ticker/light/python.png" },
-    {name: "Typescript", icon: "./assets/icons/ticker/light/typescript.png" }
-]
-
-// Creating ticker items
-function createTickerItem(iconPath: string, label: string) {
-    const item = document.createElement("div")
-    item.className = "ticker-item"
-
-    const icon = document.createElement("img")
-    icon.src = iconPath
-    icon.alt = label
-    const fileName = iconPath.split("/").pop()!
-    icon.dataset.tickerIcon = fileName
-
-    item.appendChild(icon)
-
-    return item
-}
-
-// Add items to ticker twice for seamless looping
-
-for (let i = 0; i < 2; i++) {
-    technologies.forEach(tech => {
-        ticker.appendChild(createTickerItem(tech.icon, tech.name))
-    })
-}
-
-tickerContainer.appendChild(ticker)
-
-// Social Container
-
-const socialContainer = document.createElement("div")
-socialContainer.className = "social-container"
-
-const linkedInLink = document.createElement("a")
-linkedInLink.href = "https://www.linkedin.com/in/aaron-jones-9a1866314/"
-linkedInLink.target = "_blank"
-
-// Icon Theme Changer Thing
-
-function updateThemeIcons(mode: "light" | "dark") {
-    const icons = document.querySelectorAll<HTMLImageElement>("[data-icon]")
-
-    icons.forEach(icon => {
-        const name = icon.dataset.icon
-        if (!name) return
-
-        icon.src = `./assets/icons/logos/${mode}/${name}`
-    })
-    // Changing Ticker Icons when toggle is pressed
-    const tickerIcons = document.querySelectorAll<HTMLImageElement>("[data-ticker-icon]")
-    tickerIcons.forEach(icon => {
-        const name = icon.dataset.tickerIcon
-        if (!name) return
-        icon.src = `./assets/icons/ticker/${mode}/${name}`
-    })
-}
-
-// LinkedIn Icon
-
-const linkedInIcon = document.createElement("img")
-linkedInIcon.dataset.icon = "linkedin.png"
-linkedInIcon.src = "./assets/icons/logos/light/linkedin.png"
-linkedInIcon.className = "social-icon"
-
-linkedInLink.appendChild(linkedInIcon)
-
-// Github Icon
-
-const githubLink = document.createElement("a")
-githubLink.href = "https://github.com/aarontjones"
-githubLink.target = "_blank"
-
-const githubIcon = document.createElement("img")
-githubIcon.dataset.icon = "github.svg"
-githubIcon.src = "./assets/icons/logos/light/github.svg"
-githubIcon.className = "social-icon"
-
-githubLink.appendChild(githubIcon)
-
-// Gmail Icon
-
-const emailLink = document.createElement("a")
-emailLink.href = "mailto:aarontjones4722@gmail.com"
-
-const emailIcon = document.createElement("img")
-emailIcon.dataset.icon = "gmail.png"
-emailIcon.src = "./assets/icons/logos/light/gmail.png"
-emailIcon.className = "social-icon"
-
-emailLink.appendChild(emailIcon)
-
-// assemble all socials into biography container
-
-socialContainer.appendChild(linkedInLink)
-socialContainer.appendChild(githubLink)
-socialContainer.appendChild(emailLink)
-
-// assemble left panel
-
-// leftPanel.appendChild(particlesBg)
-container.insertBefore(particlesBg, container.firstChild)
-leftPanel.appendChild(darkModeButton)
-leftPanel.appendChild(profilePicContainer)
-leftPanel.appendChild(bioContainer)
-leftPanel.appendChild(tickerContainer)
-leftPanel.appendChild(socialContainer)
-
 //Dark Mode Toggle
 darkModeButton.addEventListener("click", () => {
     const lightMode = document.body.classList.toggle("light-mode"); // toggle class
@@ -243,10 +116,131 @@ darkModeButton.addEventListener("click", () => {
     }
 });
 
-// --------------------------------------------------------------------------------------------------- RIGHT PANEL
+// Profile Picture
+const profilePicContainer = document.createElement("div")
+profilePicContainer.className = "profile-pic-container"
+
+const profilePic = document.createElement("img")
+profilePic.src = "./assets/images/profile.jpeg"
+profilePic.className = "profile-pic"
+
+profilePicContainer.appendChild(profilePic)
+
+// Name and Bio
+const bioContainer = document.createElement("div")
+bioContainer.className = "bio-container"
+
+const name = document.createElement("h1")
+name.innerText = "Aaron T Jones"
+
+const bio = document.createElement("p")
+bio.innerText = "Professional Freelance Programmer"
+
+bioContainer.appendChild(name)
+bioContainer.appendChild(bio)
+
+// Technology Ticker
+const tickerContainer = document.createElement("div")
+tickerContainer.className = "ticker-wrapper"
+
+const ticker = document.createElement("div")
+ticker.className = "ticker"
+
+// List of technologies to be displayed on ticker - if adding more, have to change animation stuff in css file
+const technologies = [
+    {name: "CSS", icon: "./assets/icons/ticker/light/css.png" },
+    {name: "Docker", icon: "./assets/icons/ticker/light/docker.png" },
+    {name: "Github", icon: "./assets/icons/ticker/light/github.svg" },
+    {name: "HTML", icon: "./assets/icons/ticker/light/html.png" },
+    {name: "PHP", icon: "./assets/icons/ticker/light/php.png" },
+    {name: "Python", icon: "./assets/icons/ticker/light/python.png" },
+    {name: "Typescript", icon: "./assets/icons/ticker/light/typescript.png" }
+]
+
+// Creating ticker items
+function createTickerItem(iconPath: string, label: string) {
+    const item = document.createElement("div")
+    item.className = "ticker-item"
+
+    const icon = document.createElement("img")
+    icon.src = iconPath
+    icon.alt = label
+
+    const fileName = iconPath.split("/").pop()!
+    icon.dataset.tickerIcon = fileName
+
+    item.appendChild(icon)
+
+    return item
+}
+
+// Add items to ticker twice for seamless looping
+for (let i = 0; i < 2; i++) {
+    technologies.forEach(tech => {
+        ticker.appendChild(createTickerItem(tech.icon, tech.name))
+    })
+}
+
+tickerContainer.appendChild(ticker)
+
+// Social Container
+const socialContainer = document.createElement("div")
+socialContainer.className = "social-container"
+
+// LinkedIn Icon
+const linkedInLink = document.createElement("a")
+linkedInLink.href = "https://www.linkedin.com/in/aaron-jones-9a1866314/"
+linkedInLink.target = "_blank"
+
+const linkedInIcon = document.createElement("img")
+linkedInIcon.dataset.icon = "linkedin.png"
+linkedInIcon.src = "./assets/icons/logos/light/linkedin.png"
+linkedInIcon.className = "social-icon"
+
+linkedInLink.appendChild(linkedInIcon)
+
+// Github Icon
+const githubLink = document.createElement("a")
+githubLink.href = "https://github.com/aarontjones"
+githubLink.target = "_blank"
+
+const githubIcon = document.createElement("img")
+githubIcon.dataset.icon = "github.svg"
+githubIcon.src = "./assets/icons/logos/light/github.svg"
+githubIcon.className = "social-icon"
+
+githubLink.appendChild(githubIcon)
+
+// Gmail Icon
+const emailLink = document.createElement("a")
+emailLink.href = "mailto:aarontjones4722@gmail.com"
+
+const emailIcon = document.createElement("img")
+emailIcon.dataset.icon = "gmail.png"
+emailIcon.src = "./assets/icons/logos/light/gmail.png"
+emailIcon.className = "social-icon"
+
+emailLink.appendChild(emailIcon)
+
+// assemble all socials into biography container
+socialContainer.appendChild(linkedInLink)
+socialContainer.appendChild(githubLink)
+socialContainer.appendChild(emailLink)
+
+// assemble left panel
+
+container.insertBefore(particlesBg, container.firstChild) // make sure particles go first
+leftPanel.appendChild(darkModeButton) // Button
+leftPanel.appendChild(profilePicContainer) // Profile Picture
+leftPanel.appendChild(bioContainer) // Container for Biography - includes name and title
+leftPanel.appendChild(tickerContainer) // contains all technologies in ticker
+leftPanel.appendChild(socialContainer) // contains all social media links
+
+// Right Panel
 const rightPanel = document.createElement("div")
 rightPanel.className = "right-panel"
 
+// Function to create sections on right panel
 function createSection(title: string, content: string) {
     const section = document.createElement("div")
     section.className = "section"
@@ -263,7 +257,7 @@ function createSection(title: string, content: string) {
     return section
 }
 
-// Short about me section - I want it all on one page.
+// Short about me section
 rightPanel.appendChild(
     createSection(
         "About me",
@@ -273,7 +267,7 @@ rightPanel.appendChild(
     )
 )
 
-//Portfolio Section
+// Portfolio introduction section
 rightPanel.appendChild(
     createSection(
         "Project Portfolio",
@@ -283,13 +277,14 @@ rightPanel.appendChild(
     )
 )
 
+// Portfolio container
 const projectContainer = document.createElement("div")
 projectContainer.className = "project-container"
 
 rightPanel.append(projectContainer)
 
-// Github API
-
+// GitHub Loader
+// Takes input from data/projects.json and loads them for every one in there.
 async function loadGitHubProjects() {
 
     const response = await fetch("./data/projects.json") // when daily update happens, it works.
@@ -330,11 +325,16 @@ async function loadGitHubProjects() {
         card.appendChild(header)
         card.appendChild(screenshotContainer)
 
+        // Layout:
+        // Title         Link To GitHub
+        // Screenshot
+        // Description
+
         projectContainer.appendChild(card)
     }
 }
 
-loadGitHubProjects() // Initializes all github projects into the portfolio section, as long as they have a allow.txt file in the root directory.
+loadGitHubProjects() // Initializes the function
 
 //Experience Section
 rightPanel.appendChild(
@@ -371,12 +371,10 @@ rightPanel.appendChild(
 )
 
 // CV Download button
-
-// Container
-
 const downloadContainer = document.createElement("div");
 downloadContainer.className = "download-container";
 
+// When Icon is pressed at bottom of right panel, downloads a locally saved CV.
 function createDownloadButton(fileName: string, filePath: string, iconPath: string, altText: string) {
     const link = document.createElement("a");
     link.href = filePath;

@@ -1,4 +1,6 @@
-1) Overhaul GitHub projects API with rate limiting - using a script or something
-2) Sort out all code with proper comments
+1) Sort out all code with proper comments
+
+style.css
+
 
 Profit?

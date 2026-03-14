@@ -11,7 +11,6 @@ async function run() {
 
     const reposRes = await fetch(`https://api.github.com/users/${username}/repos`)
     const repos = await reposRes.json()
-
     const projects = [];
 
     // Loop for each repo
@@ -20,13 +19,14 @@ async function run() {
         if (repo.fork) continue 
         
         try {
-
+            // Check if there is allow.txt in github repo
             const allowCheck = await fetch (
                 `https://api.github.com/repos/${username}/${repo.name}/contents/allow.txt`
             )
 
             if (!allowCheck.ok) continue;
 
+            // If allow.txt exists, add it to json file in data/projects.json
             const fileData = await allowCheck.json();
             const decodedText = Buffer.from(fileData.content, "base64").toString("utf8");
 
