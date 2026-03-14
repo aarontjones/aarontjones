@@ -5,7 +5,7 @@ permissions:
 
 on:
   schedule:
-    - cron: "0 0 * * *" # every 24 hours, it runs to update portfolios
+    - cron: "0 */3 * * *" # every 3 hours it updates the portfolio
   workflow_dispatch: # manual run button
 
 jobs:
