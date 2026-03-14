@@ -1,5 +1,4 @@
-1) fix somewhat pink icons for ticker when website is in light mode
-2) GitHub API rate limiting code
-3) Sort out all code with proper comments
+1) Overhaul GitHub projects API with rate limiting - using a script or something
+2) Sort out all code with proper comments
 
 Profit?

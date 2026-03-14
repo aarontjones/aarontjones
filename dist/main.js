@@ -10,6 +10,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 const app = document.getElementById("app"); // Start app
 if (!app)
     throw new Error("App container not found");
+// Local Storage for Dark Mode
+const savedTheme = localStorage.getItem("theme");
+const particleColor = savedTheme === "light" ? "#7b5cff" : "#d4af37";
+if (savedTheme === "light") {
+    document.body.classList.add("light-mode");
+    updateThemeIcons("dark");
+}
 // main container
 const container = document.createElement("div");
 container.className = "container";
@@ -27,7 +34,7 @@ tsParticles.load("particles-left", {
     background: { color: "transparent" },
     particles: {
         number: { value: 50, density: { enable: true, area: 800 } },
-        color: { value: "#d4af37" }, // default gold
+        color: { value: particleColor },
         shape: { type: "circle" },
         opacity: { value: 0.5, random: true },
         size: { value: 2, random: true },
@@ -159,6 +166,8 @@ leftPanel.appendChild(socialContainer);
 //Dark Mode Toggle
 darkModeButton.addEventListener("click", () => {
     const lightMode = document.body.classList.toggle("light-mode"); // toggle class
+    // Save theme
+    localStorage.setItem("theme", lightMode ? "light" : "dark");
     updateThemeIcons(lightMode ? "dark" : "light"); // changes from light to dark icons upon press of the button
     const color = lightMode ? "#7b5cff" : "#d4af37"; // purple or gold
     if (particlesInstance) {
@@ -317,9 +326,14 @@ const cvDownloadButton = createDownloadButton("cv.pdf", // file name for downloa
 "Download CV");
 downloadContainer.appendChild(cvDownloadButton);
 rightPanel.appendChild(downloadContainer);
-// assemble page
+// Assemble page
 container.appendChild(leftPanel);
 container.appendChild(rightPanel);
+// Assemble App
 app.appendChild(container);
+// Icon theme local storage thing
+const currentTheme = localStorage.getItem("theme");
+updateThemeIcons(currentTheme === "light" ? "dark" : "light");
 export {};
+// This has to be after the app is assembled for SOME reason.
 //# sourceMappingURL=main.js.map
