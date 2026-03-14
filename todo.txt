@@ -1,6 +1,5 @@
 1) fix somewhat pink icons for ticker when website is in light mode
-2) Add flavicon
-3) GitHub API rate limiting code
-4) Sort out all code with proper comments
+2) GitHub API rate limiting code
+3) Sort out all code with proper comments
 
 Profit?

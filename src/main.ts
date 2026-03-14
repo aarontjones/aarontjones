@@ -97,6 +97,8 @@ function createTickerItem(iconPath: string, label: string) {
     const icon = document.createElement("img")
     icon.src = iconPath
     icon.alt = label
+    const fileName = iconPath.split("/").pop()!
+    icon.dataset.tickerIcon = fileName
 
     item.appendChild(icon)
 
@@ -132,6 +134,13 @@ function updateThemeIcons(mode: "light" | "dark") {
         if (!name) return
 
         icon.src = `./assets/icons/logos/${mode}/${name}`
+    })
+    // Changing Ticker Icons when toggle is pressed
+    const tickerIcons = document.querySelectorAll<HTMLImageElement>("[data-ticker-icon]")
+    tickerIcons.forEach(icon => {
+        const name = icon.dataset.tickerIcon
+        if (!name) return
+        icon.src = `./assets/icons/ticker/${mode}/${name}`
     })
 }
 
